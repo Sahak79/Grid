@@ -26,6 +26,9 @@ var SortableGrid = (function(){
 
     var element;
     var table;
+    var inputs;
+
+    var hasError = false;
 
     function sortBy(field, reverse, isNumber) {
 
@@ -73,6 +76,7 @@ var SortableGrid = (function(){
     function init(selector) {
         element = document.getElementById(selector);
         table = document.createElement('table');
+        inputs = element.getElementsByClassName("userField");
         users.sort(sortBy("name", true, false)); // we sort initially by 'ASC'
         buildTableHeader();
         buildTableBody();
@@ -84,20 +88,20 @@ var SortableGrid = (function(){
     }
 
     function addUser() {
+        hasError = false; // reset errors
+
         var name = document.getElementById("name");
         var surname = document.getElementById("surname");
         var age = document.getElementById("age");
         var position = document.getElementById("position");
-        if(name.value != "" &&
-            surname.value != "" &&
-            age.value != "" &&
-            position.value != "") {
-            var newUser = {
-                name : name.value,
-                surname : surname.value,
-                age : age.value,
-                position : position.value
-            };
+
+        for(var i=0; i<inputs.length; i++) {
+            inputs[i].errors = {};
+            validateField(inputs[i], inputs[i].getAttribute("validation"));
+        }
+
+        if(!hasError) {
+            var newUser = {name : name.value,surname : surname.value,age : age.value,position : position.value};
             users.push(newUser);
             clearTableBody();
             buildTableBody();
@@ -105,10 +109,62 @@ var SortableGrid = (function(){
             surname.value = "";
             age.value = "";
             position.value = "";
+            removeErrorMessages();
         } else {
-            alert("Please fill all fields");
+            removeErrorMessages();
+            createErrorMessages();
         }
 
+    }
+
+    function removeErrorMessages() {
+        var errorContainers = document.getElementsByClassName("errorMessage");
+        while(errorContainers.length > 0){
+            errorContainers[0].remove();
+        }
+    }
+
+    function createErrorMessages() {
+        for(var j=0; j<inputs.length; j++) {
+            var errorContainer = document.createElement("p");
+            errorContainer.className = "errorMessage";
+            for(var error in inputs[j].errors) {
+                if(inputs[j].errors.hasOwnProperty(error)){
+                    var text = document.createTextNode(inputs[j].errors[error]);
+                    errorContainer.appendChild(text);
+                }
+            }
+            insertAfter(errorContainer, inputs[j]);
+        }
+    }
+
+    function insertAfter(newNode, referenceNode) {
+        referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    }
+
+    function validateField(element, validationRules) {
+        var rules = validationRules.split(", ");
+        rules.forEach(function(item) {
+            if(item === "required" && element.value == "") {
+                element.errors['required'] = "Please fill this field ";
+                hasError = true;
+            }
+            if(item === "min-5" && element.value.length < 5) {
+                element.errors['min5'] = "More then 5 characters ";
+                hasError = true;
+            }
+            if(item === "max-12" && element.value.length > 12) {
+                element.errors['max12'] = "Less then 12 characters ";
+                hasError = true;
+            }
+            if(item === "number") {
+                var numbers = /^[0-9]+$/;
+                if(!element.value.match(numbers)){
+                    element.errors['number'] = "Only numbers ";
+                    hasError = true;
+                }
+            }
+        });
     }
 
     function firstToUpperCase( str ) {
