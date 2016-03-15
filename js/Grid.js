@@ -145,24 +145,32 @@ var SortableGrid = (function(){
     function validateField(element, validationRules) {
         var rules = validationRules.split(", ");
         rules.forEach(function(item) {
-            if(item === "required" && element.value == "") {
-                element.errors['required'] = "Please fill this field ";
-                hasError = true;
-            }
-            if(item === "min-5" && element.value.length < 5) {
-                element.errors['min5'] = "More then 5 characters ";
-                hasError = true;
-            }
-            if(item === "max-12" && element.value.length > 12) {
-                element.errors['max12'] = "Less then 12 characters ";
-                hasError = true;
-            }
-            if(item === "number") {
-                var numbers = /^[0-9]+$/;
-                if(!element.value.match(numbers)){
-                    element.errors['number'] = "Only numbers ";
-                    hasError = true;
-                }
+            switch (item){
+                case "required" :
+                    if(element.value == "") {
+                        element.errors['required'] = "Please fill this field ";
+                        hasError = true;
+                    }
+                    break;
+                case "min-5" :
+                    if(element.value.length < 5) {
+                        element.errors['min5'] = "More then 5 characters ";
+                        hasError = true;
+                    }
+                    break;
+                case "max-12" :
+                    if(element.value.length > 12) {
+                        element.errors['max12'] = "Less then 12 characters ";
+                        hasError = true;
+                    }
+                    break;
+                case "number" :
+                    var numbers = /^[0-9]+$/;
+                    if(!element.value.match(numbers)){
+                        element.errors['number'] = "Only numbers ";
+                        hasError = true;
+                    }
+                    break;
             }
         });
     }
