@@ -1,0 +1,50 @@
+#main table, td, th {
+    border: 1px solid black;
+}
+
+#main table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#main th {
+    height: 30px;
+    padding-top: 10px;
+}
+
+#main input[type=text] {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #555;
+    outline: none;
+}
+
+#main input[type=text]:focus {
+    background-color: lightblue;
+}
+
+#main table thead th:hover{
+    cursor: pointer;
+}
+
+#main form {
+    margin-bottom: 20px;
+}
+
+#main table thead th>span {
+    width: 13px;
+    height: 13px;
+    display: inline-block;
+    margin: 4px;
+    vertical-align: middle;
+}
+
+#main .ASC span{
+    background-image: url("../img/asc.png");
+}
+
+#main .DESC span{
+    background-image: url("../img/desc.png");
+}
