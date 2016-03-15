@@ -144,35 +144,37 @@ var SortableGrid = (function(){
 
     function validateField(element, validationRules) {
         var rules = validationRules.split(", ");
-        rules.forEach(function(item) {
-            switch (item){
+        required :
+        for(var i = 0; i < rules.length; i++){
+            switch (rules[i]){
                 case "required" :
                     if(element.value == "") {
-                        element.errors['required'] = "Please fill this field ";
+                        element.errors.required = "Please fill this field ";
                         hasError = true;
+                        break required;
                     }
                     break;
                 case "min-5" :
                     if(element.value.length < 5) {
-                        element.errors['min5'] = "More then 5 characters ";
+                        element.errors.min5 = "More then 5 characters ";
                         hasError = true;
                     }
                     break;
                 case "max-12" :
                     if(element.value.length > 12) {
-                        element.errors['max12'] = "Less then 12 characters ";
+                        element.errors.max12 = "Less then 12 characters ";
                         hasError = true;
                     }
                     break;
                 case "number" :
                     var numbers = /^[0-9]+$/;
                     if(!element.value.match(numbers)){
-                        element.errors['number'] = "Only numbers ";
+                        element.errors.number = "Only numbers ";
                         hasError = true;
                     }
                     break;
             }
-        });
+        }
     }
 
     function firstToUpperCase( str ) {
